@@ -1,7 +1,8 @@
-import { Fragment, useContext, useRef, useState } from "react";
+import { Fragment, useContext, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import AuthContext from "../AuthContext";
+
 
 export default function AddProduct({
   addProductModalSetting,
@@ -11,20 +12,52 @@ export default function AddProduct({
   const [product, setProduct] = useState({
     userId: authContext.user,
     name: "",
-    // manufacturer: "",
-    price:"",
+    sku: "",
+    purchaseprice: "",
+    margin: "",
+    tags: [],
+    finalprice:"",
     quantity:"",
     height:"",
     width:"",
     description: "",
   });
-  console.log("----",product)
+  // console.log("----",product)
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
+  const [tags, setTags] = useState([])
+
+  //-------------------------------------tags------------------------
+  const handleTagSubmit = () => {
+    const newTags = product.tags
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(tag => tag);
+    setTags((prevTags) => [...prevTags, ...newTags]);
+    setProduct({ ...product, tags:[...tags, ...newTags] }); 
+  };
+
+  const handleTagDelete = (index) => {
+    setTags((prevTags) => prevTags.filter((_, i) => i !== index));
+  };
+
+  const handleClearTag = () =>{
+    setTags([])
+  }
+  //-------------------------------------------------------------------
 
   const handleInputChange = (key, value) => {
     setProduct({ ...product, [key]: value });
   };
+
+  // Calculate the final price when purchase price or margin changes
+  useEffect(() => {
+    const { purchaseprice, margin } = product;
+    if (purchaseprice && margin) {
+      const finalprice = purchaseprice * (1 + margin / 100);
+      setProduct((prevProduct) => ({ ...prevProduct, finalprice }));
+    }
+  }, [product.purchaseprice, product.margin]);
 
   const addProduct = () => {
     fetch("http://localhost:4000/api/product/add", {
@@ -35,11 +68,15 @@ export default function AddProduct({
       body: JSON.stringify(product),
     })
       .then((result) => {
-        alert("Product ADDED");
+        console.log(result);
+        alert("Product Added");
         handlePageUpdate();
         addProductModalSetting();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error('Error:', err);
+        alert('An error occurred while adding the product. Please check the details and try again.');
+      });
   };
 
   return (
@@ -95,7 +132,7 @@ export default function AddProduct({
                           <div>
                             <label
                               htmlFor="name"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Name
                             </label>
@@ -109,6 +146,25 @@ export default function AddProduct({
                               }
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder="Ex. Apple iMac 27&ldquo;"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="sku"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
+                            >
+                              SKU
+                            </label>
+                            <input
+                              type="text"
+                              name="sku"
+                              id="sku"
+                              value={product.sku}
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="SKU : RC#12412"
                             />
                           </div>
                           {/* <div>
@@ -132,27 +188,68 @@ export default function AddProduct({
                           </div> */}
                           <div>
                             <label
-                              for="price"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              htmlFor="purchaseprice"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
-                              Price
+                              Purchase Price
                             </label>
                             <input
                               type="number"
-                              name="price"
-                              id="price"
-                              value={product.price}
+                              name="purchaseprice"
+                              id="purchaseprice"
+                              value={product.purchaseprice}
                               onChange={(e) =>
                                 handleInputChange(e.target.name, e.target.value)
                               }
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="&#8377;299"
+                              placeholder="Purchase price &#8377;299"
                             />
                           </div>
                           <div>
                             <label
-                              for="quantity"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              htmlFor="margin"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
+                            >
+                              Margin
+                            </label>
+                            <select name='margin' 
+                              id="margin"
+                              value={product.margin}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"  
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                            >
+                               <option value="" selected hidden>Choose here</option>
+                              <option value="50">50%</option>
+                              <option value="75">75%</option>
+                              <option value="100">100%</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="finalprice"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
+                            >
+                              final Price
+                            </label>
+                            <input
+                              type="number"
+                              name="finalprice"
+                              id="finalprice"
+                              disabled
+                              value={product.finalprice}
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Final price &#8377;299"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="quantity"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Quantity
                             </label>
@@ -170,8 +267,27 @@ export default function AddProduct({
                           </div>
                           <div>
                             <label
-                              for="height"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              htmlFor="length"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
+                            >
+                              Length
+                            </label>
+                            <input
+                              type="length"
+                              name="length"
+                              id="length"
+                              value={product.length}
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Length in inch &ldquo;"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="height"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Height
                             </label>
@@ -189,8 +305,8 @@ export default function AddProduct({
                           </div>
                           <div>
                             <label
-                              for="width"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              htmlFor="width"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Width
                             </label>
@@ -205,11 +321,61 @@ export default function AddProduct({
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder="Width in inch &ldquo;"
                             />
-                          </div>
+                          </div><br/>
+                          <div>
+                            <label htmlFor="tags" className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
+                              Tags
+                            </label>
+                            <input
+                              type="tags"
+                              name="tags"
+                              id="tags"
+                              value={product.tags}
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                              onKeyDown={(e)=>{
+                                if(e.key==="Enter"){
+                                  handleTagSubmit()
+                                }
+                              }}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Gaming, outdoor"
+                            />
+                            <button 
+                              type="button"
+                              onClick={handleTagSubmit}
+                              className="inline-flex w-full justify-center my-1 mr-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                              
+                           >Add
+                            </button>
+                            <button 
+                              type="button"
+                              onClick={handleClearTag}
+                              className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                            >Clear
+                            </button>
+                            <div className="mt-3">
+                              {tags.map((tag, index) => (
+                                <span
+                                  key={index}
+                                  className="inline-flex items-center mb-1 bg-gray-200 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"
+                                >
+                                  {tag}
+                                  <button
+                                    onClick={() => handleTagDelete(index)}
+                                    className="ml-2 text-red-500 hover:text-red-700"
+                                  >
+                                    &times;
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          </div> 
                           <div className="sm:col-span-2">
                             <label
                               htmlFor="description"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Description
                             </label>

@@ -37,6 +37,7 @@ function Dashboard() {
   const [purchaseAmount, setPurchaseAmount] = useState("");
   const [stores, setStores] = useState([]);
   const [products, setProducts] = useState([]);
+  const [totalLiability, setTotalLiability] = useState("")
 
   const [chart, setChart] = useState({
     options: {
@@ -84,12 +85,22 @@ function Dashboard() {
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
+    fetchTotalLiability()
     fetchTotalSaleAmount();
     fetchTotalPurchaseAmount();
     fetchStoresData();
     fetchProductsData();
     fetchMonthlySalesData();
   }, []);
+
+  // Fetching total liability
+  const fetchTotalLiability = () => {
+    fetch(
+      `http://localhost:4000/api/product/get/${authContext.user}/totalLiability`
+    )
+      .then((response) => response.json())
+      .then((datas) => setTotalLiability(datas.totalLiability));
+  };
 
   // Fetching total sales amount
   const fetchTotalSaleAmount = () => {
@@ -162,10 +173,10 @@ function Dashboard() {
 
             <p>
               <span className="text-2xl font-medium text-gray-900">
-                ${saleAmount}
+              &#8377;{saleAmount}
               </span>
 
-              <span className="text-xs text-gray-500"> from $240.94 </span>
+              <span className="text-xs text-gray-500"> from &#8377;{totalLiability} </span>
             </p>
           </div>
         </article>
@@ -198,10 +209,10 @@ function Dashboard() {
             <p>
               <span className="text-2xl font-medium text-gray-900">
                 {" "}
-                ${purchaseAmount}{" "}
+                &#8377;{purchaseAmount}{" "}
               </span>
 
-              <span className="text-xs text-gray-500"> from $404.32 </span>
+              {/* <span className="text-xs text-gray-500"> from &#8377;404.32 </span> */}
             </p>
           </div>
         </article>
@@ -285,7 +296,7 @@ function Dashboard() {
             />
           </div>
           <div>
-            <Doughnut data={data} />
+            {/* <Doughnut data={data} /> */}
           </div>
         </div>
       </div>

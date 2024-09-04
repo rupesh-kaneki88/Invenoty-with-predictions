@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 
@@ -13,6 +13,7 @@ export default function AddPurchaseDetails({
     productID: "",
     quantityPurchased: "",
     purchaseDate: "",
+    purchaseAmount:"",
     totalPurchaseAmount: "",
   });
   const [open, setOpen] = useState(true);
@@ -24,6 +25,16 @@ export default function AddPurchaseDetails({
   const handleInputChange = (key, value) => {
     setPurchase({ ...purchase, [key]: value });
   };
+
+
+
+  useEffect(() =>{
+    const {quantityPurchased, purchaseAmount} = purchase
+    if(quantityPurchased && purchaseAmount){
+      const totalPurchaseAmount = purchaseAmount * quantityPurchased
+      setPurchase((prevData) => ({...prevData, totalPurchaseAmount}))
+    }
+  },[purchase.quantityPurchased, purchase.purchaseAmount ])
 
   // POST Data
   const addSale = () => {
@@ -95,7 +106,7 @@ export default function AddPurchaseDetails({
                           <div>
                             <label
                               htmlFor="productID"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Product Name
                             </label>
@@ -120,7 +131,7 @@ export default function AddPurchaseDetails({
                           <div>
                             <label
                               htmlFor="quantityPurchased"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Quantity Purchased
                             </label>
@@ -138,21 +149,21 @@ export default function AddPurchaseDetails({
                           </div>
                           <div>
                             <label
-                              htmlFor="totalPurchaseAmount"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              htmlFor="purchaseAmount"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
-                              Total Purchase Amount
+                               Purchase Amount
                             </label>
                             <input
                               type="number"
-                              name="totalPurchaseAmount"
+                              name="purchaseAmount"
                               id="price"
-                              value={purchase.totalPurchaseAmount}
+                              value={purchase.purchaseAmount}
                               onChange={(e) =>
                                 handleInputChange(e.target.name, e.target.value)
                               }
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="$299"
+                              placeholder="299 &#8377;"
                             />
                           </div>
                           <div className="h-fit w-fit">
@@ -162,7 +173,7 @@ export default function AddPurchaseDetails({
                               setShow={handleClose}
                             /> */}
                             <label
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                               htmlFor="purchaseDate"
                             >
                               Purchase Date

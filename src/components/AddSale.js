@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 
@@ -15,11 +15,19 @@ export default function AddSale({
     storeID: "",
     stockSold: "",
     saleDate: "",
+    saleAmount: "",
     totalSaleAmount: "",
   });
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
 
+  useEffect(() =>{
+    const {stockSold, saleAmount} = sale
+    if(stockSold && saleAmount){
+      const totalSaleAmount = saleAmount * stockSold
+      setSale((prevData) => ({...prevData, totalSaleAmount}))
+    }
+  },[sale.stockSold, sale.saleAmount ])
 
   // Handling Input Change for input fields
   const handleInputChange = (key, value) => {
@@ -96,7 +104,7 @@ export default function AddSale({
                           <div>
                             <label
                               htmlFor="productID"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Product Name
                             </label>
@@ -121,7 +129,7 @@ export default function AddSale({
                           <div>
                             <label
                               htmlFor="stockSold"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Stock Sold
                             </label>
@@ -141,7 +149,7 @@ export default function AddSale({
                           <div>
                             <label
                               htmlFor="storeID"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
                               Store Name
                             </label>
@@ -165,21 +173,21 @@ export default function AddSale({
                           </div>
                           <div>
                             <label
-                              htmlFor="totalSaleAmount"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              htmlFor="saleAmount"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                             >
-                              Total Sale Amount
+                               Sale Amount
                             </label>
                             <input
                               type="number"
-                              name="totalSaleAmount"
+                              name="saleAmount"
                               id="price"
-                              value={sale.totalSaleAmount}
+                              value={sale.saleAmount}
                               onChange={(e) =>
                                 handleInputChange(e.target.name, e.target.value)
                               }
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="$299"
+                              placeholder=" &#8377;299"
                             />
                           </div>
                           <div className="h-fit w-fit">
@@ -189,7 +197,7 @@ export default function AddSale({
                               setShow={handleClose}
                             /> */}
                             <label
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
                               htmlFor="salesDate"
                             >
                               Sales Date

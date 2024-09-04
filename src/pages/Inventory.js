@@ -223,7 +223,10 @@ function Inventory() {
                   Products
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Price
+                  Purchase Price
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Final Price
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Stock
@@ -235,10 +238,7 @@ function Inventory() {
                   Availibility
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Height
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Width
+                  Dimensions
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Options
@@ -254,7 +254,10 @@ function Inventory() {
                       {element.name}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                      {element.price}&#8377;
+                      &#8377;{element.purchaseprice}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                      &#8377;{element.finalprice}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                       {element.stock}
@@ -263,14 +266,19 @@ function Inventory() {
                       {element.description}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                      {element.stock > 0 ? "In Stock" : "Not in Stock"}
+                      <span className={`px-2 ${element.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {element.stock > 0 ? "In Stock" : "Not in Stock"}
+                      </span>
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                      {element.length}*{element.height}*{element.width}
+                    </td>
+                    {/* <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                       {element.height}&ldquo;
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                       {element.width}&ldquo;
-                    </td>
+                    </td> */}
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                       <span
                         className="text-green-700 cursor-pointer"
