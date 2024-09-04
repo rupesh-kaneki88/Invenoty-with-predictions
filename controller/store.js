@@ -6,9 +6,11 @@ const addStore = async (req, res) => {
   const addStore = await new Store({
     userID : req.body.userId,
     name: req.body.name,
-    category: req.body.category,
+    pincode: req.body.pincode,
     address: req.body.address,
     city: req.body.city,
+    owner: req.body.owner,
+    gst_no: req.body.gst_no,
     image: req.body.image
   });
 
@@ -26,4 +28,35 @@ const getAllStores = async (req, res) => {
   res.json(findAllStores);
 };
 
-module.exports = { addStore, getAllStores };
+//Update selected store
+const updateSelectedStore = async(req,res) =>{
+  try{
+    const updatedResult = await Store.findByIdAndUpdate(
+      {_id: req.body.storeID},
+      {
+        name: req.body.name,
+        pincode: req.body.pincode,
+        address: req.body.address,
+        city: req.body.city,
+        owner: req.body.owner,
+        gst_no: req.body.gst_no,
+      },
+      { new: true}
+    );
+    console.log(updatedResult)
+    res.json(updatedResult)
+  }
+  catch(e) {
+    console.log(e)
+    res.status(400).send("error")
+  }
+}
+
+const deleteSelectedStore = async(req,res) =>{
+  const deleteStore = await Store.deleteOne(
+    {_id: req.params.id}
+  )
+  res.json(deleteStore)
+}
+
+module.exports = { addStore, getAllStores, updateSelectedStore, deleteSelectedStore };

@@ -11,8 +11,16 @@ const StoreSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    category: {
+    owner: {
       type: String,
+      required: true,
+    },
+    gst_no: {
+      type: String,
+      required: true,
+    },
+    pincode: {
+      type: Number,
       required: true,
     },
     address: {
