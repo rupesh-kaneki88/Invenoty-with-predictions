@@ -8,9 +8,11 @@ app.post("/add", sales.addSales);
 // Get All Sales
 app.get("/get/:userID", sales.getSalesData);
 app.get("/getmonthly", sales.getMonthlySales);
-
+app.get("/get/:userID/getCurrentWeekSales", sales.getCurrentWeekSales);
+app.get("/get/:userID/getPreviousWeekSales", sales.getPreviousWeekSales);
 
 app.get("/get/:userID/totalsaleamount", sales.getTotalSalesAmount);
+
 
 module.exports = app;
 

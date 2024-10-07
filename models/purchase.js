@@ -24,6 +24,10 @@ const PurchaseSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    storeId: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

@@ -14,7 +14,7 @@ const addProduct = (req, res) => {
   }
 
   const addProduct = new Product({
-    userID: req.body.userId,
+    userID: req.body.userId || req.query.userId,
     name: req.body.name,
     sku: req.body.sku,
     purchaseprice: parseFloat(req.body.purchaseprice),
@@ -42,6 +42,8 @@ const addProduct = (req, res) => {
 
 // Get All Products
 const getAllProducts = async (req, res) => {
+  const userId = req.params.userId
+  // console.log("User",userId)
   const findAllProducts = await Product.find({
     userID: req.params.userId,
   }).sort({ _id: -1 }); // -1 for descending;
@@ -53,11 +55,15 @@ const totalLiability = async (req, res) => {
   try {
     // Initialize total sum
     let totalSum = 0;
+    // const userId = req.params.userId
+    // console.log("User",userId)
 
     // Fetch all products for the given user
     const findAllProducts = await Product.find({
       userID: req.params.userId,
     }).sort({ _id: -1 });
+
+    // console.log("Products: ",findAllProducts)
 
     // Calculate total liability
     findAllProducts.forEach(product => {
@@ -116,7 +122,7 @@ const updateSelectedProduct = async (req, res) => {
     res.json(updatedResult);
   } catch (error) {
     console.log(error);
-    res.status(402).send("Error");
+    res.status(402).send(error);
   }
 };
 
@@ -129,6 +135,89 @@ const searchProduct = async (req, res) => {
   res.json(products);
 };
 
+//stock update
+const stockUpdate = async(req,res) => {
+  try{
+    const products = await Product.find()
+
+    let lowStock = 0
+    let outOfStock = 0
+    products.forEach(product => {
+      if(product.stock <=0 ){
+        outOfStock += 1
+      }
+      else if (product.stock < 10){
+        lowStock +=1
+      }
+    });
+
+    // console.log("Stocks lfawf: ",lowStock)
+
+    res.json({lowStock, outOfStock})
+  } catch(e){
+    res.status(500).send(e)
+  }
+}
+
+async function prepareData(data) {
+  const features = [];
+  const labels = [];
+
+  for (const item of data) {
+    const { _id, name, sku, purchaseprice, finalprice, margin, stock, length, height, width } = item;
+
+    // Prepare input features
+    const featureVector = [
+      purchaseprice,
+      finalprice,
+      margin,
+      stock,
+      length,
+      height,
+      width,
+      item.sales.length // Number of sales
+    ];
+
+    // Prepare label (e.g., total sales amount)
+    const label = item.sales.reduce((sum, sale) => sum + sale.TotalSaleAmount, 0);
+
+    features.push(featureVector);
+    labels.push(label);
+  }
+
+  return { features, labels };
+}
+
+
+// for future product prediction
+const product_prediction = async () =>{
+  const product = await Product.find()
+  const sales = await Sales.find()
+
+  // Combine products and sales data
+  const combinedData = products.map(product => ({
+    ...product.toObject(),
+    sales: sales.filter(sale => sale.ProductID.toString() === product._id.toString())
+  }));
+
+  const { features, labels } = await prepareData(combinedData);
+
+  // Load the existing model
+  const model = await tf.loadLayersModel('../product_prediction_model');
+
+  // Convert data to tensors
+  const X = tf.tensor2d(features);
+  const y = tf.tensor1d(labels);
+
+  // Make predictions
+  const predictions = model.predict(X).dataSync();
+
+  console.log(predictions)
+
+  return predictions;
+}
+
+
 module.exports = {
   addProduct,
   getAllProducts,
@@ -136,4 +225,6 @@ module.exports = {
   updateSelectedProduct,
   searchProduct,
   totalLiability,
+  stockUpdate,
+  product_prediction,
 };

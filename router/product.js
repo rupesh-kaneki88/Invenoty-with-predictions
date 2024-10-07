@@ -18,7 +18,13 @@ app.post("/update", product.updateSelectedProduct);
 app.get("/search", product.searchProduct);
 
 //total liability
-app.get("/get/totalLiability",product.totalLiability)
+app.get("/get/:userId/totalLiability",product.totalLiability)
+
+//stock update
+app.get("/get/:userId/stockUpdate",product.stockUpdate)
+
+//product prediction
+app.get("/get/prediction/",product.product_prediction)
 
 // http://localhost:4000/api/product/search?searchTerm=fa
 
