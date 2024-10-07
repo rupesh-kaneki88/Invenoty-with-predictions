@@ -11,6 +11,19 @@ function Inventory() {
   const [searchTerm, setSearchTerm] = useState();
   const [updatePage, setUpdatePage] = useState(true);
   const [stores, setAllStores] = useState([]);
+  const [currentWeekSales, setCurrentWeekSales] = useState({
+    topSellingProduct: '',
+    unitsSold: 0,
+    totalCurrentWeekSales: 0,
+  });
+
+  const [stock, setStock] = useState({
+    lowStock: 0,
+    outOfStock: 0,
+  })
+  const [saleAmount, setSaleAmount] = useState("");
+
+
 
   const authContext = useContext(AuthContext);
   console.log('====================================');
@@ -20,7 +33,34 @@ function Inventory() {
   useEffect(() => {
     fetchProductsData();
     fetchSalesData();
+    fetchCurrentWeekSales()
+    fetchStockUpdate()
+    fetchTotalSaleAmount()
   }, [updatePage]);
+
+  //fetching stock update
+  const fetchStockUpdate = () =>{
+    fetch(
+      `http://localhost:4000/api/product/get/${authContext.user}/stockUpdate`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log('Stock data:', data)
+        setStock(data);
+      })
+      .catch((error) => console.error("Error fetching stocks:", error));
+  }
+
+  //fetching weekly sales
+  const fetchCurrentWeekSales = () =>{
+    fetch(
+      `http://localhost:4000/api/sales/get/${authContext.user}/getCurrentWeekSales`
+    )
+      .then((response) => response.json())
+      .then((data) => setCurrentWeekSales(data))
+      .catch((error) => console.error("Error fetching weekly sales:", error));
+  }
+
 
   // Fetching Data of All Products
   const fetchProductsData = () => {
@@ -49,6 +89,15 @@ function Inventory() {
       .then((data) => {
         setAllStores(data);
       });
+  };
+
+  // Fetching total sales amount
+  const fetchTotalSaleAmount = () => {
+    fetch(
+      `http://localhost:4000/api/sales/get/${authContext.user}/getPreviousWeekSales`
+    )
+      .then((response) => response.json())
+      .then((data) => setSaleAmount(data.totalPreviousWeekSales));
   };
 
   // Modal for Product ADD
@@ -113,12 +162,13 @@ function Inventory() {
                     {stores.length}
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
-                    Last 7 days
+                    {/* Last 7 days */}
+                    Previous week
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <span className="font-semibold text-gray-600 text-base">
-                    0&#8377;
+                    {saleAmount || 0}&#8377;
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Revenue
@@ -133,7 +183,7 @@ function Inventory() {
               <div className="flex gap-8">
                 <div className="flex flex-col">
                   <span className="font-semibold text-gray-600 text-base">
-                    NA
+                    {currentWeekSales.topSellingProduct || "No Data"}
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Last 7 days
@@ -141,9 +191,10 @@ function Inventory() {
                 </div>
                 <div className="flex flex-col">
                   <span className="font-semibold text-gray-600 text-base">
-                    0&#8377;
+                  {/* {currentWeekSales.unitsSold}&#8377; */}
+                  {currentWeekSales.unitsSold} units
                   </span>
-                  <span className="font-thin text-gray-400 text-xs">Cost</span>
+                  {/* <span className="font-thin text-gray-400 text-xs">Cost</span> */}
                 </div>
               </div>
             </div>
@@ -154,7 +205,7 @@ function Inventory() {
               <div className="flex gap-8">
                 <div className="flex flex-col">
                   <span className="font-semibold text-gray-600 text-base">
-                    0
+                    {stock.lowStock || 0}
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Low Stock
@@ -162,7 +213,7 @@ function Inventory() {
                 </div>
                 <div className="flex flex-col">
                   <span className="font-semibold text-gray-600 text-base">
-                    0
+                    {stock.outOfStock || 0}
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Out of Stock

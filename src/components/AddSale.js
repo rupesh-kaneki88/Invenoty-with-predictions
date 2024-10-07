@@ -14,12 +14,13 @@ export default function AddSale({
     productID: "",
     storeID: "",
     stockSold: "",
-    saleDate: "",
+    saleDate: new Date().toISOString().split("T")[0],
     saleAmount: "",
     totalSaleAmount: "",
   });
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
   useEffect(() =>{
     const {stockSold, saleAmount} = sale
@@ -29,6 +30,12 @@ export default function AddSale({
     }
   },[sale.stockSold, sale.saleAmount ])
 
+  // Fetch selected product details
+  useEffect(() => {
+    const product = products.find(p => p._id === sale.productID);
+    setSelectedProduct(product);
+  }, [sale.productID, products]);
+
   // Handling Input Change for input fields
   const handleInputChange = (key, value) => {
     setSale({ ...sale, [key]: value });
@@ -36,6 +43,15 @@ export default function AddSale({
 
   // POST Data
   const addSale = () => {
+    if (!sale.productID || !sale.stockSold || !sale.saleAmount || !sale.storeID) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    if(selectedProduct.stock < sale.stockSold){
+      alert("Insufficient stock!!!")
+      return
+    }
     fetch("http://localhost:4000/api/sales/add", {
       method: "POST",
       headers: {
@@ -144,6 +160,11 @@ export default function AddSale({
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder="0 - 999"
                             />
+                             {selectedProduct && (
+                              <p className="text-gray-600 italic mt-2">
+                                In inventory: {selectedProduct.stock}
+                              </p>
+                            )}
                           </div>
 
                           <div>
@@ -189,6 +210,11 @@ export default function AddSale({
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder=" &#8377;299"
                             />
+                             {selectedProduct && (
+                              <p className="text-gray-600 italic mt-2">
+                                Base final price: {selectedProduct.finalprice} &#8377;
+                              </p>
+                            )}
                           </div>
                           <div className="h-fit w-fit">
                             {/* <Datepicker

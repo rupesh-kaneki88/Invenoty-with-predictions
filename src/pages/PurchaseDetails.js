@@ -7,12 +7,15 @@ function PurchaseDetails() {
   const [purchase, setAllPurchaseData] = useState([]);
   const [products, setAllProducts] = useState([]);
   const [updatePage, setUpdatePage] = useState(true);
+  const [stores, setAllStores] = useState([]);
+
 
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
     fetchPurchaseData();
     fetchProductsData();
+    fetchStoreData();
   }, [updatePage]);
 
   // Fetching Data of All Purchase items
@@ -35,6 +38,15 @@ function PurchaseDetails() {
       .catch((err) => console.log(err));
   };
 
+    // Fetching all stores data
+    const fetchStoreData = () => {
+      fetch(`http://localhost:4000/api/store/get/${authContext.user}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setAllStores(data);
+        })
+        .catch((err) => console.log(err));
+    };
   // Modal for Sale Add
   const addSaleModalSetting = () => {
     setPurchaseModal(!showPurchaseModal);
@@ -53,6 +65,7 @@ function PurchaseDetails() {
           <AddPurchaseDetails
             addSaleModalSetting={addSaleModalSetting}
             products={products}
+            stores={stores}
             handlePageUpdate={handlePageUpdate}
             authContext = {authContext}
           />
@@ -88,11 +101,16 @@ function PurchaseDetails() {
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Total Purchase Amount
                 </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Store
+                </th>
               </tr>
             </thead>
 
             <tbody className="divide-y divide-gray-200">
               {purchase.map((element, index) => {
+                    // Find the matching store for this purchase
+                const store = stores.find((el) => el._id === element.storeId);
                 return (
                   <tr key={element._id}>
                     <td className="whitespace-nowrap px-4 py-2  text-gray-900">
@@ -102,7 +120,7 @@ function PurchaseDetails() {
                       {element.QuantityPurchased}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                      {new Date(element.PurchaseDate).toLocaleDateString() ==
+                      {new Date(element.PurchaseDate).toLocaleDateString() ===
                       new Date().toLocaleDateString()
                         ? "Today"
                         : element.PurchaseDate}
@@ -110,6 +128,10 @@ function PurchaseDetails() {
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                     &#8377;{element.TotalPurchaseAmount}
                     </td>
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-900">
+                      {store ? store.name : "Unknown Store"} {/* Display store name */}
+                    </td>
+                    
                   </tr>
                 );
               })}

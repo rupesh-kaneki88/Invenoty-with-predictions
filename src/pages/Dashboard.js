@@ -39,6 +39,20 @@ function Dashboard() {
   const [products, setProducts] = useState([]);
   const [totalLiability, setTotalLiability] = useState("")
 
+  //for trends
+  const [percentageChange, setPercentageChange] = useState(0);
+  const [currentWeekSales, setCurrentWeekSales] = useState()
+  const [previousWeekSales, setPreviousWeekSales] = useState()
+
+    // Conditional styling based on positive or negative change
+    const isPositive = percentageChange >= 0;
+    const bgColor = isPositive ? 'bg-green-100' : 'bg-red-100';
+    const textColor = isPositive ? 'text-green-600' : 'text-red-600';
+    const iconPath = isPositive
+      ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' // Upward trend for positive
+      : 'M13 17h8m0 0V9m0 8l-8-8-4 4-6-6'; // Downward trend for negative
+
+
   const [chart, setChart] = useState({
     options: {
       chart: {
@@ -91,7 +105,34 @@ function Dashboard() {
     fetchStoresData();
     fetchProductsData();
     fetchMonthlySalesData();
+    fetchCurrentWeekSales()
+    fetchPreviousWeekSales()
+    getPrediction()
   }, []);
+
+  useEffect(() => {
+    if (previousWeekSales !== 0) {
+      const change = ((currentWeekSales - previousWeekSales) / previousWeekSales) * 100;
+      setPercentageChange(change);
+    }
+  }, [currentWeekSales, previousWeekSales]);
+
+  //fetching weekly sales
+  const fetchCurrentWeekSales = () =>{
+    fetch(
+      `http://localhost:4000/api/sales/get/${authContext.user}/getCurrentWeekSales`
+    )
+      .then((response) => response.json())
+      .then((data) => setCurrentWeekSales(data.totalCurrentWeekSales));
+  }
+
+  const fetchPreviousWeekSales = () =>{
+    fetch(
+      `http://localhost:4000/api/sales/get/${authContext.user}/getPreviousWeekSales`
+    )
+      .then((response) => response.json())
+      .then((data) => setPreviousWeekSales(data.totalPreviousWeekSales));
+  }
 
   // Fetching total liability
   const fetchTotalLiability = () => {
@@ -143,11 +184,47 @@ function Dashboard() {
       .catch((err) => console.log(err));
   };
 
+  // Function to fetch total sales data and make a prediction request
+async function getPrediction() {
+  try {
+    // Step 1: Fetch total sales data from the get API
+    const response = await fetch(`http://localhost:4000/api/sales/get/${authContext.user}/`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch sales data');
+    }
+
+    const salesData = await response.json();
+    console.log("Sales data: ",salesData)
+
+    // Assuming the salesData object matches the expected input structure for the prediction model
+    // Step 2: Pass the sales data to the prediction API
+    const predictionResponse = await fetch('http://localhost:5000/predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(salesData), // Pass sales data in the request body
+    });
+
+    if (!predictionResponse.ok) {
+      throw new Error('Failed to get prediction');
+    }
+
+    const predictionResult = await predictionResponse.json();
+
+    // Step 3: Display the prediction results (modify this part based on your requirements)
+    console.log('Top 5 Products for Next Month:', predictionResult);
+
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
   return (
     <>
       <div className="grid grid-cols-1 col-span-12 lg:col-span-10 gap-6 md:grid-cols-3 lg:grid-cols-4  p-4 ">
         <article className="flex flex-col gap-4 rounded-lg border  border-gray-100 bg-white p-6  ">
-          <div className="inline-flex gap-2 self-end rounded bg-green-100 p-1 text-green-600">
+        <div className={`inline-flex gap-2 self-end rounded ${bgColor} p-1 ${textColor}`}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"
@@ -163,7 +240,9 @@ function Dashboard() {
               />
             </svg>
 
-            <span className="text-xs font-medium"> 67.81% </span>
+            <span className="text-xs font-medium">
+              {Math.abs(percentageChange).toFixed(2)}%
+            </span>
           </div>
 
           <div>
@@ -297,6 +376,7 @@ function Dashboard() {
           </div>
           <div>
             {/* <Doughnut data={data} /> */}
+            
           </div>
         </div>
       </div>

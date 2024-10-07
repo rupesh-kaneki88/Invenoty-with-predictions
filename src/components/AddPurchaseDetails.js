@@ -5,6 +5,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 export default function AddPurchaseDetails({
   addSaleModalSetting,
   products,
+  stores,
   handlePageUpdate,
   authContext
 }) {
@@ -12,12 +13,14 @@ export default function AddPurchaseDetails({
     userID: authContext.user,
     productID: "",
     quantityPurchased: "",
-    purchaseDate: "",
+    purchaseDate: new Date().toISOString().split("T")[0], // Default to today's date
     purchaseAmount:"",
     totalPurchaseAmount: "",
+    storeId:"",
   });
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
   console.log("PPu: ", purchase);
 
@@ -36,8 +39,19 @@ export default function AddPurchaseDetails({
     }
   },[purchase.quantityPurchased, purchase.purchaseAmount ])
 
+    // Fetch selected product details
+    useEffect(() => {
+      const product = products.find(p => p._id === purchase.productID);
+      setSelectedProduct(product);
+    }, [purchase.productID, products]);
+
   // POST Data
   const addSale = () => {
+    if (!purchase.productID || !purchase.quantityPurchased || !purchase.purchaseAmount || !purchase.storeId) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
     fetch("http://localhost:4000/api/purchase/add", {
       method: "POST",
       headers: {
@@ -165,6 +179,11 @@ export default function AddPurchaseDetails({
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder="299 &#8377;"
                             />
+                            {selectedProduct && (
+                              <p className="text-gray-600 italic mt-2">
+                                In inventory: {selectedProduct.purchaseprice} &#8377;
+                              </p>
+                            )}
                           </div>
                           <div className="h-fit w-fit">
                             {/* <Datepicker
@@ -188,6 +207,31 @@ export default function AddPurchaseDetails({
                                 handleInputChange(e.target.name, e.target.value)
                               }
                             />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="storeId"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
+                            >
+                              Store Name
+                            </label>
+                            <select
+                              id="storeId"
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              name="storeId"
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                            >
+                              <option selected="">Select Store</option>
+                              {stores.map((element, index) => {
+                                return (
+                                  <option key={element._id} value={element._id}>
+                                    {element.name}
+                                  </option>
+                                );
+                              })}
+                            </select>
                           </div>
                         </div>
                         <div className="flex items-center space-x-4">
