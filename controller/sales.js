@@ -27,7 +27,7 @@ const addSales = (req, res) => {
 // Get All Sales Data
 const getSalesData = async (req, res) => {
   const findAllSalesData = await Sales.find({"userID": req.params.userID})
-    .sort({ _id: -1 })
+    .sort({ SaleDate: -1 })
     .populate("ProductID")
     .populate("StoreID"); // -1 for descending order
   res.json(findAllSalesData);
