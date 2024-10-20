@@ -3,6 +3,7 @@ import Chart from "react-apexcharts";
 import AuthContext from "../AuthContext";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import PredictionChart from "../components/Prediction";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 export const data = {
@@ -32,12 +33,15 @@ export const data = {
   ],
 };
 
+
+
 function Dashboard() {
   const [saleAmount, setSaleAmount] = useState("");
   const [purchaseAmount, setPurchaseAmount] = useState("");
   const [stores, setStores] = useState([]);
   const [products, setProducts] = useState([]);
   const [totalLiability, setTotalLiability] = useState("")
+  const [prediction, setPrediction] = useState([])
 
   //for trends
   const [percentageChange, setPercentageChange] = useState(0);
@@ -97,6 +101,8 @@ function Dashboard() {
   };
 
   const authContext = useContext(AuthContext);
+
+
 
   useEffect(() => {
     fetchTotalLiability()
@@ -194,7 +200,7 @@ async function getPrediction() {
     }
 
     const salesData = await response.json();
-    console.log("Sales data: ",salesData)
+    // console.log("Sales data: ",salesData)
 
     // Assuming the salesData object matches the expected input structure for the prediction model
     // Step 2: Pass the sales data to the prediction API
@@ -212,8 +218,14 @@ async function getPrediction() {
 
     const predictionResult = await predictionResponse.json();
 
+    if (Array.isArray(predictionResult)) {
+      setPrediction(predictionResult); // Ensure it's set only if it's an array
+    } else {
+      console.error("Unexpected prediction result:", predictionResult);
+    }
+
     // Step 3: Display the prediction results (modify this part based on your requirements)
-    console.log('Top 5 Products for Next Month:', predictionResult);
+    // console.log('Top 5 Products for Next Month:', predictionResult);
 
   } catch (error) {
     console.error('Error:', error);
@@ -376,9 +388,10 @@ async function getPrediction() {
           </div>
           <div>
             {/* <Doughnut data={data} /> */}
-            
+            <PredictionChart predictionData={prediction} />
           </div>
         </div>
+        
       </div>
     </>
   );
