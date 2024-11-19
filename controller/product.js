@@ -19,7 +19,7 @@ const addProduct = (req, res) => {
     sku: req.body.sku,
     purchaseprice: parseFloat(req.body.purchaseprice),
     finalprice: parseFloat(req.body.finalprice),
-    stock: parseInt(req.body.quantity),
+    stock: parseInt(req.body.quantity) || 0,
     height: parseFloat(req.body.height),
     width: parseFloat(req.body.width),
     length: parseFloat(req.body.length),
@@ -48,6 +48,16 @@ const getAllProducts = async (req, res) => {
     userID: req.params.userId,
   }).sort({ _id: -1 }); // -1 for descending;
   res.json(findAllProducts);
+};
+
+// Get specific Product
+const getProduct = async (req, res) => {
+  const productID = req.params.productId
+  // console.log("User",userId)
+  const findProduct = await Product.find({
+    _id: req.params.productID,
+  }).sort({ _id: -1 }); // -1 for descending;
+  res.json(findProduct);
 };
 
 // Get Total Liability
@@ -129,16 +139,27 @@ const updateSelectedProduct = async (req, res) => {
 // Search Products
 const searchProduct = async (req, res) => {
   const searchTerm = req.query.searchTerm;
-  const products = await Product.find({
-    name: { $regex: searchTerm, $options: "i" },
-  });
-  res.json(products);
+  if (searchTerm == ""){
+    const products = await Product.find({
+      userID: req.params.userId,
+    });
+    res.json(products);
+  }
+  else{
+    const products = await Product.find({
+      userID: req.params.userId,
+      name: { $regex: searchTerm, $options: "i" },
+    });
+    res.json(products);
+  }
 };
 
 //stock update
 const stockUpdate = async(req,res) => {
   try{
-    const products = await Product.find()
+    const products = await await Product.find({
+      userID: req.params.userId,
+    }).sort({ _id: -1 });
 
     let lowStock = 0
     let outOfStock = 0
@@ -191,7 +212,9 @@ async function prepareData(data) {
 
 // for future product prediction
 const product_prediction = async () =>{
-  const product = await Product.find()
+  const product = await await Product.find({
+                    userID: req.params.userId,
+                  }).sort({ _id: -1 });
   const sales = await Sales.find()
 
   // Combine products and sales data
@@ -227,4 +250,5 @@ module.exports = {
   totalLiability,
   stockUpdate,
   product_prediction,
+  getProduct,
 };

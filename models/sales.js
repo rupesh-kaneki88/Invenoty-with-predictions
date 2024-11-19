@@ -25,6 +25,10 @@ const SaleSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    SaleAmount: {
+      type: Number,
+      required: true,
+    },
     TotalSaleAmount: {
       type: Number,
       required: true,

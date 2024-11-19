@@ -10,6 +10,7 @@ const addSales = (req, res) => {
     StoreID: req.body.storeID,
     StockSold: req.body.stockSold,
     SaleDate: req.body.saleDate,
+    SaleAmount: req.body.saleAmount,
     TotalSaleAmount: req.body.totalSaleAmount,
   });
 
@@ -46,7 +47,7 @@ const getTotalSalesAmount = async(req,res) => {
 
 const getMonthlySales = async (req, res) => {
   try {
-    const sales = await Sales.find();
+    const sales = await Sales.find({"userID": req.params.userID});
 
     // Initialize array with 12 zeros
     const salesAmount = [];
@@ -68,7 +69,7 @@ const getMonthlySales = async (req, res) => {
 
 const getPreviousWeekSales = async (req, res) => {
   try {
-    const sales = await Sales.find(); // Fetch all sales (You can optimize with a query if needed)
+    const sales = await Sales.find({"userID": req.params.userID}); // Fetch all sales (You can optimize with a query if needed)
 
     // Get the current date
     const currentDate = new Date();
@@ -98,7 +99,7 @@ const getPreviousWeekSales = async (req, res) => {
 
 const getCurrentWeekSales = async (req, res) => {
   try {
-    const sales = await Sales.find(); // Fetch all sales
+    const sales = await Sales.find({"userID": req.params.userID}); // Fetch all sales
 
     // Get the current date
     const currentDate = new Date();

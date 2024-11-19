@@ -8,10 +8,11 @@ const addPurchase = (req, res) => {
     ProductID: req.body.productID,
     QuantityPurchased: req.body.quantityPurchased,
     PurchaseDate: req.body.purchaseDate,
+    PurchaseAmount: req.body.purchaseAmount,
     TotalPurchaseAmount: req.body.totalPurchaseAmount,
     storeId: req.body.storeId,
   });
-  // console.log("Purchase Details: ",addPurchase)
+  console.log("Purchase Details: ",addPurchaseDetails)
   addPurchaseDetails
     .save()
     .then((result) => {

@@ -8,6 +8,9 @@ app.post("/add", product.addProduct);
 // Get All Products
 app.get("/get/:userId", product.getAllProducts);
 
+// Get Specific Products
+app.get("/getByProduct/:productId", product.getProduct);
+
 // Delete Selected Product Item
 app.get("/delete/:id", product.deleteSelectedProduct);
 
@@ -15,7 +18,7 @@ app.get("/delete/:id", product.deleteSelectedProduct);
 app.post("/update", product.updateSelectedProduct);
 
 // Search Product
-app.get("/search", product.searchProduct);
+app.get("/:userId/search", product.searchProduct);
 
 //total liability
 app.get("/get/:userId/totalLiability",product.totalLiability)

@@ -4,9 +4,11 @@ const productRoute = require("./router/product");
 const storeRoute = require("./router/store");
 const purchaseRoute = require("./router/purchase");
 const salesRoute = require("./router/sales");
+const userRoute = require('./router/user')
 const cors = require("cors");
 const User = require("./models/users");
 const Product = require("./models/product");
+const emailRoute = require('./router/email')
 
 
 const app = express();
@@ -27,56 +29,61 @@ app.use("/api/purchase", purchaseRoute);
 // Sales API
 app.use("/api/sales", salesRoute);
 
+// Email API
+app.use('/api/sendmail',emailRoute)
+
+// User authentication
+app.use('/api/user',userRoute)
 // ------------- Signin --------------
-let userAuthCheck;
-app.post("/api/login", async (req, res) => {
-  console.log(req.body);
-  // res.send("hi");
-  try {
-    const user = await User.findOne({
-      email: req.body.email,
-      password: req.body.password,
-    });
-    console.log("USER: ", user);
-    if (user) {
-      res.send(user);
-      userAuthCheck = user;
-    } else {
-      res.status(401).send("Invalid Credentials");
-      userAuthCheck = null;
-    }
-  } catch (error) {
-    console.log(error);
-    res.send(error);
-  }
-});
+// let userAuthCheck;
+// app.post("/api/login", async (req, res) => {
+//   console.log(req.body);
+//   // res.send("hi");
+//   try {
+//     const user = await User.findOne({
+//       email: req.body.email,
+//       password: req.body.password,
+//     });
+//     console.log("USER: ", user);
+//     if (user) {
+//       res.send(user);
+//       userAuthCheck = user;
+//     } else {
+//       res.status(401).send("Invalid Credentials");
+//       userAuthCheck = null;
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.send(error);
+//   }
+// });
 
-// Getting User Details of login user
-app.get("/api/login", (req, res) => {
-  res.send(userAuthCheck);
-});
-// ------------------------------------
+// // Getting User Details of login user
+// app.get("/api/login", (req, res) => {
+//   res.send(userAuthCheck);
+// });
+// // ------------------------------------
 
-// Registration API
-app.post("/api/register", (req, res) => {
-  let registerUser = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: req.body.password,
-    phoneNumber: req.body.phoneNumber,
-    imageUrl: req.body.imageUrl,
-  });
+// // Registration API
+// app.post("/api/register", (req, res) => {
+//   let registerUser = new User({
+//     firstName: req.body.firstName,
+//     lastName: req.body.lastName,
+//     email: req.body.email,
+//     password: req.body.password,
+//     phoneNumber: req.body.phoneNumber,
+//     imageUrl: req.body.imageUrl,
+//   });
 
-  registerUser
-    .save()
-    .then((result) => {
-      res.status(200).send(result);
-      alert("Signup Successfull");
-    })
-    .catch((err) => console.log("Signup: ", err));
-  console.log("request: ", req.body);
-});
+//   registerUser
+//     .save()
+//     .then((result) => {
+//       res.status(200).send(result);
+//       alert("Signup Successfull");
+//     })
+//     .catch((err) => console.log("Signup: ", err));
+//   console.log("request: ", req.body);
+// });
 
 
 app.get("/testget", async (req,res)=>{
