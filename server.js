@@ -1,5 +1,5 @@
 const express = require("express");
-const { main } = require("./index");
+const { main } = require("./models/index");
 const productRoute = require("./router/product");
 const storeRoute = require("./router/store");
 const purchaseRoute = require("./router/purchase");
