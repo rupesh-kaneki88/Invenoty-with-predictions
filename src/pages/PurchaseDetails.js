@@ -20,7 +20,7 @@ function PurchaseDetails() {
 
   // Fetching Data of All Purchase items
   const fetchPurchaseData = () => {
-    fetch(`http://localhost:4000/api/purchase/get/${authContext.user}`)
+    fetch(`https://inventoryapi-l88i.onrender.com/api/purchase/get/${authContext.user}`)
       .then((response) => response.json())
       .then((data) => {
         setAllPurchaseData(data);
@@ -30,7 +30,7 @@ function PurchaseDetails() {
 
   // Fetching Data of All Products
   const fetchProductsData = () => {
-    fetch(`http://localhost:4000/api/product/get/${authContext.user}`)
+    fetch(`https://inventoryapi-l88i.onrender.com/api/product/get/${authContext.user}`)
       .then((response) => response.json())
       .then((data) => {
         setAllProducts(data);
@@ -40,7 +40,7 @@ function PurchaseDetails() {
 
     // Fetching all stores data
     const fetchStoreData = () => {
-      fetch(`http://localhost:4000/api/store/get/${authContext.user}`)
+      fetch(`https://inventoryapi-l88i.onrender.com/api/store/get/${authContext.user}`)
         .then((response) => response.json())
         .then((data) => {
           setAllStores(data);

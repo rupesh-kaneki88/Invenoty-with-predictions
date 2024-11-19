@@ -23,7 +23,7 @@ function Login() {
 
   const authCheck = () => {
     setTimeout(() => {
-      fetch("http://localhost:4000/api/login")
+      fetch("https://inventoryapi-l88i.onrender.com/api/user/login")
         .then((response) => response.json())
         .then((data) => {
           alert("Successfully Login");
@@ -47,7 +47,7 @@ function Login() {
     if (form.email === "" || form.password === "") {
       alert("To login user, enter details to proceed...");
     } else {
-      fetch("http://localhost:4000/api/login", {
+      fetch("https://inventoryapi-l88i.onrender.com/api/user/login", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -79,8 +79,8 @@ function Login() {
         <div className="w-full max-w-md space-y-8 p-10 rounded-lg">
           <div>
             <img
-              className="mx-auto h-12 w-auto"
-              src={require("../assets/froggy logo.png")}
+              className="mx-auto h-20 w-auto"
+              src={require("../assets/logo-2.png")}
               alt="Your Company"
             />
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">

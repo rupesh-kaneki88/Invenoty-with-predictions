@@ -60,7 +60,7 @@ export default function AddProduct({
   }, [product.purchaseprice, product.margin]);
 
   const addProduct = () => {
-    fetch("http://localhost:4000/api/product/add", {
+    fetch("https://inventoryapi-l88i.onrender.com/api/product/add", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -246,7 +246,7 @@ export default function AddProduct({
                               placeholder="Final price &#8377;299"
                             />
                           </div>
-                          <div>
+                          {/* <div>
                             <label
                               htmlFor="quantity"
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark"
@@ -264,7 +264,7 @@ export default function AddProduct({
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder="Quantity 0 - 999"
                             />
-                          </div>
+                          </div> */}
                           <div>
                             <label
                               htmlFor="length"
@@ -321,7 +321,7 @@ export default function AddProduct({
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder="Width in inch &ldquo;"
                             />
-                          </div><br/>
+                          </div>
                           <div>
                             <label htmlFor="tags" className="block mb-2 text-sm font-medium text-gray-900 dark:text-dark">
                               Tags

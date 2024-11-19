@@ -32,9 +32,10 @@ const PredictionChart = ({ predictionData }) => {
   };
 
   return (
-    <div>
+    <div className='flex-auto'>
       <h2>Predicted Sales for Next Month</h2>
-      <Doughnut data={chartData} />
+      {/* <Doughnut data={chartData} /> */}
+      <h1 className='text-center mt-12'><i>We are working on it...</i></h1>
     </div>
   );
 };

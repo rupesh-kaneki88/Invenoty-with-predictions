@@ -12,6 +12,11 @@ function Register() {
     imageUrl: "",
   });
 
+  const [termsCheck, setTermsCheck] = useState(false)
+  const handleTermsChange = (e) => {
+    setTermsCheck(e.target.checked)
+  }
+
   const navigate = useNavigate();
 
   // Handling Input change for registration form.
@@ -21,19 +26,33 @@ function Register() {
 
   // Register User
   const registerUser = () => {
-    fetch("http://localhost:4000/api/register", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(form),
-    })
-      .then((result) => {
-        alert("Successfully Registered, Now Login with your details");
-        navigate('/login')
-        
+
+    if (!form.firstName || !form.email || !form.password ) {
+      alert("Please fill out all required fields.");
+      // return false;
+    }
+    // Check if terms and conditions are accepted
+    if (!termsCheck) {
+      alert("Please accept the terms and conditions.");
+      // return false;
+    }
+
+    else{
+      fetch("https://inventoryapi-l88i.onrender.com/api/user/register", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(form),
       })
-      .catch((err) => console.log(err));
+        .then((result) => {
+          alert("Successfully Registered, Now Login with your details");
+          navigate('/login')
+          
+        })
+        .catch((err) => console.log(err));
+
+    }
   };
   // ------------------
 
@@ -62,6 +81,7 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    registerUser()
   }
 
   return (
@@ -70,8 +90,8 @@ function Register() {
         <div className="w-full max-w-md space-y-8  p-10 rounded-lg">
           <div>
             <img
-              className="mx-auto h-12 w-auto"
-              src={require("../assets/froggy logo.png")}
+              className="mx-auto h-20 w-auto"
+              src={require("../assets/logo-2.png")}
               alt="Your Company"
             />
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
@@ -94,7 +114,6 @@ function Register() {
                 <input
                   name="lastName"
                   type="text"
-                  required
                   className="relative block w-full rounded-t-md border-0 py-1.5 px-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="Last Name"
                   value={form.lastName}
@@ -132,7 +151,6 @@ function Register() {
                   name="phoneNumber"
                   type="number"
                   autoComplete="phoneNumber"
-                  required
                   className="relative block w-full rounded-b-md border-0 py-1.5 px-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   placeholder="Phone Number"
                   value={form.phoneNumber}
@@ -151,14 +169,15 @@ function Register() {
                   name="remember-me"
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  defaultChecked
+                  checked = {termsCheck}
+                  onChange={handleTermsChange}
                   required
                 />
                 <label
                   htmlFor="remember-me"
                   className="ml-2 block text-sm text-gray-900"
                 >
-                  I Agree Terms & Conditons
+                  <Link to={"/Terms"} target="blank">I Agree Terms & Conditons</Link>
                 </label>
               </div>
 
@@ -175,7 +194,8 @@ function Register() {
               <button
                 type="submit"
                 className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                onClick={registerUser}
+                // onClick={registerUser}
+                disabled = {!termsCheck}
               >
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                   {/* <LockClosedIcon

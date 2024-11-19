@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function SideMenu() {
-  const localStorageData = JSON.parse(localStorage.getItem("user"));
+  const localStorageData = JSON.parse(localStorage.getItem("user")) || JSON.parse(sessionStorage.getItem('user'));
 
   return (
     <div className="h-full flex-col justify-between  bg-white hidden lg:flex ">

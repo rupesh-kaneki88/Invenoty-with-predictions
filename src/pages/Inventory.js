@@ -41,7 +41,7 @@ function Inventory() {
   //fetching stock update
   const fetchStockUpdate = () =>{
     fetch(
-      `http://localhost:4000/api/product/get/${authContext.user}/stockUpdate`
+      `https://inventoryapi-l88i.onrender.com/api/product/get/${authContext.user}/stockUpdate`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -54,7 +54,7 @@ function Inventory() {
   //fetching weekly sales
   const fetchCurrentWeekSales = () =>{
     fetch(
-      `http://localhost:4000/api/sales/get/${authContext.user}/getCurrentWeekSales`
+      `https://inventoryapi-l88i.onrender.com/api/sales/get/${authContext.user}/getCurrentWeekSales`
     )
       .then((response) => response.json())
       .then((data) => setCurrentWeekSales(data))
@@ -64,7 +64,7 @@ function Inventory() {
 
   // Fetching Data of All Products
   const fetchProductsData = () => {
-    fetch(`http://localhost:4000/api/product/get/${authContext.user}`)
+    fetch(`https://inventoryapi-l88i.onrender.com/api/product/get/${authContext.user}`)
       .then((response) => response.json())
       .then((data) => {
         setAllProducts(data);
@@ -74,7 +74,7 @@ function Inventory() {
 
   // Fetching Data of Search Products
   const fetchSearchData = () => {
-    fetch(`http://localhost:4000/api/product/search?searchTerm=${searchTerm}`)
+    fetch(`https://inventoryapi-l88i.onrender.com/api/product/${authContext.user}/search?searchTerm=${searchTerm}`)
       .then((response) => response.json())
       .then((data) => {
         setAllProducts(data);
@@ -84,7 +84,7 @@ function Inventory() {
 
   // Fetching all stores data
   const fetchSalesData = () => {
-    fetch(`http://localhost:4000/api/store/get/${authContext.user}`)
+    fetch(`https://inventoryapi-l88i.onrender.com/api/store/get/${authContext.user}`)
       .then((response) => response.json())
       .then((data) => {
         setAllStores(data);
@@ -94,7 +94,7 @@ function Inventory() {
   // Fetching total sales amount
   const fetchTotalSaleAmount = () => {
     fetch(
-      `http://localhost:4000/api/sales/get/${authContext.user}/getPreviousWeekSales`
+      `https://inventoryapi-l88i.onrender.com/api/sales/get/${authContext.user}/getPreviousWeekSales`
     )
       .then((response) => response.json())
       .then((data) => setSaleAmount(data.totalPreviousWeekSales));
@@ -110,14 +110,16 @@ function Inventory() {
     console.log("Clicked: edit");
     setUpdateProduct(selectedProductData);
     setShowUpdateModal(!showUpdateModal);
+    console.log("Selected Product for Update:", selectedProductData);
+
   };
 
 
   // Delete item
   const deleteItem = (id) => {
     console.log("Product ID: ", id);
-    console.log(`http://localhost:4000/api/product/delete/${id}`);
-    fetch(`http://localhost:4000/api/product/delete/${id}`)
+    console.log(`https://inventoryapi-l88i.onrender.com/api/product/delete/${id}`);
+    fetch(`https://inventoryapi-l88i.onrender.com/api/product/delete/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setUpdatePage(!updatePage);
@@ -163,7 +165,7 @@ function Inventory() {
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     {/* Last 7 days */}
-                    Previous week
+                    No. of stores
                   </span>
                 </div>
                 <div className="flex flex-col">
@@ -171,7 +173,7 @@ function Inventory() {
                     {saleAmount || 0}&#8377;
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
-                    Revenue
+                  Previous week Revenue
                   </span>
                 </div>
               </div>

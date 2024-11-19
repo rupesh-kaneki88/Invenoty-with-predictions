@@ -52,7 +52,7 @@ export default function AddSale({
       alert("Insufficient stock!!!")
       return
     }
-    fetch("http://localhost:4000/api/sales/add", {
+    fetch("https://inventoryapi-l88i.onrender.com/api/sales/add", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

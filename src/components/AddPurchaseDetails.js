@@ -43,6 +43,13 @@ export default function AddPurchaseDetails({
     useEffect(() => {
       const product = products.find(p => p._id === purchase.productID);
       setSelectedProduct(product);
+      if (product && product.purchaseprice) {
+        // Update the purchaseAmount when a product is selected
+        setPurchase((prevData) => ({
+          ...prevData,
+          purchaseAmount: product.purchaseprice,
+        }));
+      }
     }, [purchase.productID, products]);
 
   // POST Data
@@ -52,7 +59,7 @@ export default function AddPurchaseDetails({
       return;
     }
 
-    fetch("http://localhost:4000/api/purchase/add", {
+    fetch("https://inventoryapi-l88i.onrender.com/api/purchase/add", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -64,7 +71,10 @@ export default function AddPurchaseDetails({
         handlePageUpdate();
         addSaleModalSetting();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        alert("Some error occured!")
+        console.log("Error: ",err)
+      });
   };
 
   return (

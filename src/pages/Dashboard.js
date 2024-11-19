@@ -126,7 +126,7 @@ function Dashboard() {
   //fetching weekly sales
   const fetchCurrentWeekSales = () =>{
     fetch(
-      `http://localhost:4000/api/sales/get/${authContext.user}/getCurrentWeekSales`
+      `https://inventoryapi-l88i.onrender.com/api/sales/get/${authContext.user}/getCurrentWeekSales`
     )
       .then((response) => response.json())
       .then((data) => setCurrentWeekSales(data.totalCurrentWeekSales));
@@ -134,7 +134,7 @@ function Dashboard() {
 
   const fetchPreviousWeekSales = () =>{
     fetch(
-      `http://localhost:4000/api/sales/get/${authContext.user}/getPreviousWeekSales`
+      `https://inventoryapi-l88i.onrender.com/api/sales/get/${authContext.user}/getPreviousWeekSales`
     )
       .then((response) => response.json())
       .then((data) => setPreviousWeekSales(data.totalPreviousWeekSales));
@@ -143,7 +143,7 @@ function Dashboard() {
   // Fetching total liability
   const fetchTotalLiability = () => {
     fetch(
-      `http://localhost:4000/api/product/get/${authContext.user}/totalLiability`
+      `https://inventoryapi-l88i.onrender.com/api/product/get/${authContext.user}/totalLiability`
     )
       .then((response) => response.json())
       .then((datas) => setTotalLiability(datas.totalLiability));
@@ -152,7 +152,7 @@ function Dashboard() {
   // Fetching total sales amount
   const fetchTotalSaleAmount = () => {
     fetch(
-      `http://localhost:4000/api/sales/get/${authContext.user}/totalsaleamount`
+      `https://inventoryapi-l88i.onrender.com/api/sales/get/${authContext.user}/totalsaleamount`
     )
       .then((response) => response.json())
       .then((datas) => setSaleAmount(datas.totalSaleAmount));
@@ -161,7 +161,7 @@ function Dashboard() {
   // Fetching total purchase amount
   const fetchTotalPurchaseAmount = () => {
     fetch(
-      `http://localhost:4000/api/purchase/get/${authContext.user}/totalpurchaseamount`
+      `https://inventoryapi-l88i.onrender.com/api/purchase/get/${authContext.user}/totalpurchaseamount`
     )
       .then((response) => response.json())
       .then((datas) => setPurchaseAmount(datas.totalPurchaseAmount));
@@ -169,14 +169,14 @@ function Dashboard() {
 
   // Fetching all stores data
   const fetchStoresData = () => {
-    fetch(`http://localhost:4000/api/store/get/${authContext.user}`)
+    fetch(`https://inventoryapi-l88i.onrender.com/api/store/get/${authContext.user}`)
       .then((response) => response.json())
       .then((datas) => setStores(datas));
   };
 
   // Fetching Data of All Products
   const fetchProductsData = () => {
-    fetch(`http://localhost:4000/api/product/get/${authContext.user}`)
+    fetch(`https://inventoryapi-l88i.onrender.com/api/product/get/${authContext.user}`)
       .then((response) => response.json())
       .then((datas) => setProducts(datas))
       .catch((err) => console.log(err));
@@ -184,7 +184,7 @@ function Dashboard() {
 
   // Fetching Monthly Sales
   const fetchMonthlySalesData = () => {
-    fetch(`http://localhost:4000/api/sales/getmonthly`)
+    fetch(`https://inventoryapi-l88i.onrender.com/api/sales/getmonthly/${authContext.user}`)
       .then((response) => response.json())
       .then((datas) => updateChartData(datas.salesAmount))
       .catch((err) => console.log(err));
@@ -194,7 +194,7 @@ function Dashboard() {
 async function getPrediction() {
   try {
     // Step 1: Fetch total sales data from the get API
-    const response = await fetch(`http://localhost:4000/api/sales/get/${authContext.user}/`);
+    const response = await fetch(`https://inventoryapi-l88i.onrender.com/api/sales/get/${authContext.user}/`);
     if (!response.ok) {
       throw new Error('Failed to fetch sales data');
     }
@@ -236,9 +236,9 @@ async function getPrediction() {
     <>
       <div className="grid grid-cols-1 col-span-12 lg:col-span-10 gap-6 md:grid-cols-3 lg:grid-cols-4  p-4 ">
         <article className="flex flex-col gap-4 rounded-lg border  border-gray-100 bg-white p-6  ">
-        <div className={`inline-flex gap-2 self-end rounded ${bgColor} p-1 ${textColor}`}>
+        {/* <div className={`inline-flex gap-2 self-end rounded ${bgColor} p-1 ${textColor}`}>
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.flaticon.com/free-icons/sales"
               className="h-4 w-4"
               fill="none"
               viewBox="0 0 24 24"
@@ -255,6 +255,15 @@ async function getPrediction() {
             <span className="text-xs font-medium">
               {Math.abs(percentageChange).toFixed(2)}%
             </span>
+          </div> */}
+
+          <div className="inline-flex gap-2 self-end rounded  p-1 text-red-600">
+            <img 
+              className="h-10 w-10"
+              src={require("../assets/sales.png")}
+              alt="profile"
+            />
+            
           </div>
 
           <div>
@@ -267,13 +276,13 @@ async function getPrediction() {
               &#8377;{saleAmount}
               </span>
 
-              <span className="text-xs text-gray-500"> from &#8377;{totalLiability} </span>
+              <span className="text-xs text-gray-500">  / goods valuation &#8377;{totalLiability} </span>
             </p>
           </div>
         </article>
 
         <article className="flex flex-col  gap-4 rounded-lg border border-gray-100 bg-white p-6 ">
-          <div className="inline-flex gap-2 self-end rounded bg-red-100 p-1 text-red-600">
+          {/* <div className="inline-flex gap-2 self-end rounded bg-red-100 p-1 text-red-600">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"
@@ -290,6 +299,15 @@ async function getPrediction() {
             </svg>
 
             <span className="text-xs font-medium"> 67.81% </span>
+          </div> */}
+
+          <div className="inline-flex gap-2 self-end rounded  p-1 text-red-600">
+            <img 
+              className="h-10 w-10"
+              src={require("../assets/buy.png")}
+              alt="profile"
+            />
+            
           </div>
 
           <div>
@@ -308,7 +326,7 @@ async function getPrediction() {
           </div>
         </article>
         <article className="flex flex-col   gap-4 rounded-lg border border-gray-100 bg-white p-6 ">
-          <div className="inline-flex gap-2 self-end rounded bg-red-100 p-1 text-red-600">
+          {/* <div className="inline-flex gap-2 self-end rounded bg-red-100 p-1 text-red-600">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"
@@ -325,6 +343,15 @@ async function getPrediction() {
             </svg>
 
             <span className="text-xs font-medium"> 67.81% </span>
+          </div> */}
+
+          <div className="inline-flex gap-2 self-end rounded  p-1 text-red-600">
+            <img 
+              className="h-10 w-10"
+              src={require("../assets/shopping-cart.png")}
+              alt="profile"
+            />
+            
           </div>
 
           <div>
@@ -343,7 +370,7 @@ async function getPrediction() {
           </div>
         </article>
         <article className="flex flex-col   gap-4 rounded-lg border border-gray-100 bg-white p-6 ">
-          <div className="inline-flex gap-2 self-end rounded bg-red-100 p-1 text-red-600">
+          {/* <div className="inline-flex gap-2 self-end rounded bg-red-100 p-1 text-red-600">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"
@@ -360,6 +387,15 @@ async function getPrediction() {
             </svg>
 
             <span className="text-xs font-medium"> 67.81% </span>
+          </div> */}
+
+          <div className="inline-flex gap-2 self-end rounded  p-1 text-red-600">
+            <img 
+              className="h-10 w-10"
+              src={require("../assets/store.png")}
+              alt="profile"
+            />
+            
           </div>
 
           <div>

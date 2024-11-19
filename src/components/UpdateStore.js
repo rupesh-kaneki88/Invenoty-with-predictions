@@ -26,7 +26,7 @@ export default function UpdateStore({
   };
 
   const UpdateStore = () => {
-    fetch("http://localhost:4000/api/store/update", {
+    fetch("https://inventoryapi-l88i.onrender.com/api/store/update", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

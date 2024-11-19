@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import SideMenu from "./SideMenu";
+import Footer from "./Footer";
 
 function Layout() {
   return (
@@ -14,6 +15,9 @@ function Layout() {
           <SideMenu />
         </div>
         <Outlet />
+      </div>
+      <div className="md:h-16">
+        <Footer />
       </div>
     </>
   );

@@ -31,7 +31,7 @@ export default function AddStore() {
       return;
     }
 
-    fetch("http://localhost:4000/api/store/add", {
+    fetch("https://inventoryapi-l88i.onrender.com/api/store/add", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

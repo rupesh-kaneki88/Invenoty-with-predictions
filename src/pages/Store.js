@@ -18,7 +18,7 @@ function Store() {
 
   // Fetching all stores data
   const fetchData = () => {
-    fetch(`http://localhost:4000/api/store/get/${authContext.user}`)
+    fetch(`https://inventoryapi-l88i.onrender.com/api/store/get/${authContext.user}`)
       .then((response) => response.json())
       .then((data) => {
         setAllStores(data);
@@ -41,8 +41,8 @@ function Store() {
   const handleDelete = (id) => {
     // Logic to handle deleting a store
     console.log("Store ID: ", id);
-    console.log(`http://localhost:4000/api/store/delete/${id}`);
-    fetch(`http://localhost:4000/api/store/delete/${id}`)
+    console.log(`https://inventoryapi-l88i.onrender.com/api/store/delete/${id}`);
+    fetch(`https://inventoryapi-l88i.onrender.com/api/store/delete/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setUpdatePage(!updatePage);

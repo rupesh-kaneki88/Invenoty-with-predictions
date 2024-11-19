@@ -20,38 +20,38 @@ function classNames(...classes) {
 
 export default function Header() {
   const authContext = useContext(AuthContext);
-  const localStorageData = JSON.parse(localStorage.getItem("user"));
+  const localStorageData = JSON.parse(localStorage.getItem("user")) || JSON.parse(sessionStorage.getItem('user'));
   return (
     <>
       <div className="min-h-full">
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
             <>
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
                       <div className="flex justify-center items-center gap-2">
                         <img
                           className="h-16 w-18"
-                          src={require("../assets/froggy logo.png")}
+                          src={require("../assets/logo-2.png")}
                           alt="Inventory Management System"
                         />
                         <span className="font-bold text-white italic">
-                          Giftgarden Inventory Management
+                          Inventory Management
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
-                      <button
+                      {/* <button
                         type="button"
                         className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                       >
                         <span className="sr-only">View notifications</span>
                         <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
+                      </button> */}
 
                       {/* Profile dropdown */}
                       <Menu as="div" className="relative ml-3">
