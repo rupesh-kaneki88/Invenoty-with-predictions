@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/Inventory-with-predictions/static/css/main.b1825cb1.css",
+    "main.js": "/Inventory-with-predictions/static/js/main.a14cb0bc.js",
+    "static/js/787.47855dff.chunk.js": "/Inventory-with-predictions/static/js/787.47855dff.chunk.js",
+    "static/media/rupesh.jpg": "/Inventory-with-predictions/static/media/rupesh.c6fb29c5d80f5d4802c7.jpg",
+    "static/media/signup.jpg": "/Inventory-with-predictions/static/media/signup.f15f90666859b33549cb.jpg",
+    "static/media/Login.png": "/Inventory-with-predictions/static/media/Login.a96deb606c90ef5d6e3e.png",
+    "static/media/logo-2.png": "/Inventory-with-predictions/static/media/logo-2.7efcb5539209126f52f8.png",
+    "static/media/technology.png": "/Inventory-with-predictions/static/media/technology.a90ac3e4fae0464ae79c.png",
+    "static/media/instagram.png": "/Inventory-with-predictions/static/media/instagram.1792ff30fb032c94685c.png",
+    "static/media/shopping-cart.png": "/Inventory-with-predictions/static/media/shopping-cart.f6b9cb21a69d263d3759.png",
+    "static/media/github.png": "/Inventory-with-predictions/static/media/github.553c66159c5672f25df6.png",
+    "static/media/buy.png": "/Inventory-with-predictions/static/media/buy.7094bb64f6abf420304b.png",
+    "static/media/store.png": "/Inventory-with-predictions/static/media/store.64e6d825d46daab29ff7.png",
+    "static/media/sales.png": "/Inventory-with-predictions/static/media/sales.c62858f10614084c4985.png",
+    "static/media/linkedin.png": "/Inventory-with-predictions/static/media/linkedin.6892b3ae328c7a1e055f.png",
+    "index.html": "/Inventory-with-predictions/index.html",
+    "main.b1825cb1.css.map": "/Inventory-with-predictions/static/css/main.b1825cb1.css.map",
+    "main.a14cb0bc.js.map": "/Inventory-with-predictions/static/js/main.a14cb0bc.js.map",
+    "787.47855dff.chunk.js.map": "/Inventory-with-predictions/static/js/787.47855dff.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b1825cb1.css",
+    "static/js/main.a14cb0bc.js"
+  ]
+}
