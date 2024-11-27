@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Inventory-with-predictions/static/css/main.b1825cb1.css",
-    "main.js": "/Inventory-with-predictions/static/js/main.a14cb0bc.js",
+    "main.js": "/Inventory-with-predictions/static/js/main.917f4f81.js",
     "static/js/787.47855dff.chunk.js": "/Inventory-with-predictions/static/js/787.47855dff.chunk.js",
     "static/media/rupesh.jpg": "/Inventory-with-predictions/static/media/rupesh.c6fb29c5d80f5d4802c7.jpg",
     "static/media/signup.jpg": "/Inventory-with-predictions/static/media/signup.f15f90666859b33549cb.jpg",
@@ -17,11 +17,11 @@
     "static/media/linkedin.png": "/Inventory-with-predictions/static/media/linkedin.6892b3ae328c7a1e055f.png",
     "index.html": "/Inventory-with-predictions/index.html",
     "main.b1825cb1.css.map": "/Inventory-with-predictions/static/css/main.b1825cb1.css.map",
-    "main.a14cb0bc.js.map": "/Inventory-with-predictions/static/js/main.a14cb0bc.js.map",
+    "main.917f4f81.js.map": "/Inventory-with-predictions/static/js/main.917f4f81.js.map",
     "787.47855dff.chunk.js.map": "/Inventory-with-predictions/static/js/787.47855dff.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b1825cb1.css",
-    "static/js/main.a14cb0bc.js"
+    "static/js/main.917f4f81.js"
   ]
 }
