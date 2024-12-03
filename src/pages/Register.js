@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UploadImage from "../components/UploadImage";
+import { useLoading } from "../components/LoadingContext"; // Import the loading context
 
 function Register() {
+  const { showLoading, hideLoading } = useLoading(); // Destructure to access show and hide loading
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -12,10 +14,10 @@ function Register() {
     imageUrl: "",
   });
 
-  const [termsCheck, setTermsCheck] = useState(false)
+  const [termsCheck, setTermsCheck] = useState(false);
   const handleTermsChange = (e) => {
-    setTermsCheck(e.target.checked)
-  }
+    setTermsCheck(e.target.checked);
+  };
 
   const navigate = useNavigate();
 
@@ -26,68 +28,72 @@ function Register() {
 
   // Register User
   const registerUser = () => {
-
-    if (!form.firstName || !form.email || !form.password ) {
+    if (!form.firstName || !form.email || !form.password) {
       alert("Please fill out all required fields.");
-      // return false;
+      return;
     }
     // Check if terms and conditions are accepted
     if (!termsCheck) {
       alert("Please accept the terms and conditions.");
-      // return false;
+      return;
     }
 
-    else{
-      fetch("https://inventoryapi-l88i.onrender.com/api/user/register", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(form),
+    // Start loading
+    showLoading();
+
+    fetch("https://inventoryapi-l88i.onrender.com/api/user/register", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(form),
+    })
+      .then((result) => {
+        // Stop loading when the request is successful
+        hideLoading();
+        alert("Successfully Registered, Now Login with your details");
+        navigate('/login');
       })
-        .then((result) => {
-          alert("Successfully Registered, Now Login with your details");
-          navigate('/login')
-          
-        })
-        .catch((err) => console.log(err));
-
-    }
+      .catch((err) => {
+        // Stop loading if there's an error
+        hideLoading();
+        console.log(err);
+      });
   };
-  // ------------------
 
   // Uploading image to cloudinary
   const uploadImage = async (image) => {
     const data = new FormData();
     data.append("file", image);
     data.append("upload_preset", "inventory");
-    console.log("Before fetch"); // Log before the fetch request
+
+    showLoading(); // Show loading during the image upload
 
     await fetch("https://api.cloudinary.com/v1_1/dnilsui8j/image/upload", {
       method: "POST",
       body: data,
     })
-      .then((res) =>{ 
-        console.log("Fetch completed, parsing JSON") // Log after fetch completes
-        return res.json();})
+      .then((res) => res.json())
       .then((data) => {
-        console.log("Cloudinary data:",data)
         setForm({ ...form, imageUrl: data.url });
         alert("Image Successfully Uploaded");
+        hideLoading(); // Hide loading after the image is uploaded
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        hideLoading(); // Hide loading in case of an error
+      });
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    registerUser()
-  }
+    registerUser();
+  };
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 h-screen  items-center place-items-center">
-        <div className="w-full max-w-md space-y-8  p-10 rounded-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 h-screen items-center place-items-center">
+        <div className="w-full max-w-md space-y-8 p-10 rounded-lg">
           <div>
             <img
               className="mx-auto h-20 w-auto"
@@ -99,7 +105,6 @@ function Register() {
             </h2>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            {/* <input type="hidden" name="remember" defaultValue="true"  /> */}
             <div className="flex flex-col gap-4 -space-y-px rounded-md shadow-sm">
               <div className="flex gap-4">
                 <input
@@ -158,8 +163,6 @@ function Register() {
                 />
               </div>
               <UploadImage uploadImage={uploadImage} />
-              {/* <UploadImage uploadImage /> */}
-
             </div>
 
             <div className="flex items-center justify-between">
@@ -169,7 +172,7 @@ function Register() {
                   name="remember-me"
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  checked = {termsCheck}
+                  checked={termsCheck}
                   onChange={handleTermsChange}
                   required
                 />
@@ -182,9 +185,7 @@ function Register() {
               </div>
 
               <div className="text-sm">
-                <span
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
-                >
+                <span className="font-medium text-indigo-600 hover:text-indigo-500">
                   Forgot your password?
                 </span>
               </div>
@@ -194,22 +195,13 @@ function Register() {
               <button
                 type="submit"
                 className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                // onClick={registerUser}
-                disabled = {!termsCheck}
+                disabled={!termsCheck}
               >
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  {/* <LockClosedIcon
-                      className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                      aria-hidden="true"
-                    /> */}
-                </span>
                 Sign up
               </button>
               <p className="mt-2 text-center text-sm text-gray-600">
                 Or{" "}
-                <span
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
-                >
+                <span className="font-medium text-indigo-600 hover:text-indigo-500">
                   Already Have an Account, Please
                   <Link to="/login"> Signin now </Link>
                 </span>

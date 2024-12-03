@@ -21,6 +21,14 @@ function classNames(...classes) {
 export default function Header() {
   const authContext = useContext(AuthContext);
   const localStorageData = JSON.parse(localStorage.getItem("user")) || JSON.parse(sessionStorage.getItem('user'));
+  const handleSignOut = () => {
+    // Clear user data from both localStorage and sessionStorage
+    localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
+    
+    // Call signout from the context (if you have additional signout logic there)
+    authContext.signout();
+  };
   return (
     <>
       <div className="min-h-full">
@@ -173,7 +181,7 @@ export default function Header() {
                         href={item.href}
                         className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                       >
-                        <span onClick={() => authContext.signout()}>
+                        <span onClick={handleSignOut}>
                           {item.name}{" "}
                         </span>
                       </Disclosure.Button>

@@ -14,6 +14,9 @@ import Store from "./pages/Store";
 import Sales from "./pages/Sales";
 import PurchaseDetails from "./pages/PurchaseDetails";
 import Terms from "./pages/Terms";
+import { LoadingProvider } from "./components/LoadingContext";
+import LoadingScreen from "./components/LoadingScreen";
+import './App.css'
 
 const App = () => {
   const [user, setUser] = useState("");
@@ -43,6 +46,7 @@ const App = () => {
   const signout = () => {
     setUser(null);
     localStorage.removeItem("user");
+    sessionStorage.removeItem('user')
   };
 
   let value = { user, signin, signout };
@@ -63,7 +67,9 @@ const App = () => {
 
   return (
     <AuthContext.Provider value={value}>
-      <BrowserRouter>
+    <LoadingProvider>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <LoadingScreen /> {/* Render the loading screen here */}
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -86,6 +92,7 @@ const App = () => {
           <Route path="*" element={<NoPageFound />} />
         </Routes>
       </BrowserRouter>
+    </LoadingProvider>
     </AuthContext.Provider>
   );
 };
